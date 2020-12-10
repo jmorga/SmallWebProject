@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1>The Calculator</h1>
+
+<div class="container">
+
+    <input data-bind="value: firstValue" />
+
+    <select data-bind="options: math, value: symbol">
+        <!-- The dropdown menu
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option> -->
+    </select>
+
+    <input data-bind="value: secondValue" />
+
+    <span>=</span>
+
+    <input disabled="disabled" id="test" />
+
+    @section scripts {
+        <script src="~/Scripts/calcultator.js"></script>
+    }
+
+</div>
