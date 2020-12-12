@@ -5,3 +5,29 @@
 
 <h1>Database</h1>
 
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+    </thead>
+
+    <!-- Generate table body -->
+    <tbody data-bind="foreach: personList">
+        <tr>
+            <td data-bind="text: fullName().id"></td>
+            <td><input data-bind="value: fullName().firstName" /></td>
+            <td><input data-bind="value: fullName().lastName" /></td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+
+@section scripts {
+    <script src="~/Scripts/database.js"></script>
+}
