@@ -19,7 +19,7 @@ function AppViewModel() {
             }),
             dataType: "json",
             success: function (data) {
-                $("#test").val(data);
+                $("#result").val(data);
             },
             error: function () {
                 return "fail";

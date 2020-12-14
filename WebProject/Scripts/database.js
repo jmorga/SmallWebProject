@@ -3,14 +3,54 @@
 function person(completeName) {
     let self = this;
 
-    self.fullName = ko.observable(completeName);
+    self.id = ko.observable(completeName.id);
+    self.firstName = ko.observable(completeName.firstName);
+    self.lastName = ko.observable(completeName.lastName);
+
+    ko.computed(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "/Database/ChangePeople",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                'id': self.id(),
+                'firstName': self.firstName(),
+                'lastName': self.lastName()
+            }),
+            dataType: "json",
+            success: function (data) {
+                console.log("Saved");
+            },
+            error: function () {
+                return "fail";
+            }
+        });
+    });
 }
 
 function databaseViewModel() {
     let self = this;
 
-    //Getting data from server
+    self.personList = ko.observableArray();
 
+    //Getting data from server
+    $.ajax({
+        type: "POST",
+        url: "/Database/GetPeople",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: updateTable,
+        error: function () {
+            alert("Fail");
+        }
+    });
+
+    function updateTable(data) {
+        data.forEach(function (entry) {
+            self.personList.push(new person(entry));
+        });
+    };
 
     //self.dummyPersonData = [
     //    { id: 1, firstName: "John", lastName: "Doe" },
@@ -19,11 +59,11 @@ function databaseViewModel() {
     //];
 
     //Adding data to display in the web page
-    self.personList = ko.observableArray([
-        new person(self.dummyPersonData[0]),
-        new person(self.dummyPersonData[1]),
-        new person(self.dummyPersonData[2])
-    ]);
+    //self.personList = ko.observableArray([
+    //    new person(self.dummyPersonData[0]),
+    //    new person(self.dummyPersonData[1]),
+    //    new person(self.dummyPersonData[2])
+    //]);
 
 }
 

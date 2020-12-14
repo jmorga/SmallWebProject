@@ -9,18 +9,32 @@ namespace WebProject.Controllers
 {
     public class DatabaseController : Controller
     {
-        // GET: Database
-        Database database;
         public ActionResult Database()
         {
-            database = new Database();
-
-            //Load data from database here
-            //List<Person> people = database.getPersonList();
 
             return View();
         }
 
-       
+        [HttpPost]
+        public JsonResult GetPeople()
+        {
+            Database database = new Models.Database();
+            List<Person> personList = database.getPersonList();
+
+            return Json(personList, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ChangePeople(string id, string firstName, string lastName)
+        {
+            if (id != null && firstName != null && lastName != null)
+            {
+                Database database = new Models.Database();
+                database.changePersonData(new Person(Int32.Parse(id), firstName, lastName));
+                return Json("Named was changed", JsonRequestBehavior.AllowGet);
+            }
+
+            return Json("Nothing changed", JsonRequestBehavior.AllowGet);
+        }
     }
 }
