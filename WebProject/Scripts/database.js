@@ -1,5 +1,6 @@
 ﻿/// <reference path="knockout-3.5.1.debug.js" />
 
+//Person class to store the id, first name and last name of a person.
 function person(completeName) {
     let self = this;
 
@@ -7,6 +8,8 @@ function person(completeName) {
     self.firstName = ko.observable(completeName.firstName);
     self.lastName = ko.observable(completeName.lastName);
 
+    //When the first or last name changes, an ajax call is used to send the new information to the ChangePeople 
+    //method in the Database controller to update the Person table in the People database with the new information.
     ko.computed(function () {
 
         $.ajax({
@@ -23,7 +26,7 @@ function person(completeName) {
                 console.log("Saved");
             },
             error: function () {
-                return "fail";
+                alert("Saving data failed");
             }
         });
     });
@@ -34,7 +37,8 @@ function databaseViewModel() {
 
     self.personList = ko.observableArray();
 
-    //Getting data from server
+    //It calls the GetPeople method from the database controller to get an array with the data from
+    //the Person table in the People database
     $.ajax({
         type: "POST",
         url: "/Database/GetPeople",
@@ -46,6 +50,8 @@ function databaseViewModel() {
         }
     });
 
+
+    //When the ajax call gets the data, it calls this function to add the data into the list to be displayed in the web page
     function updateTable(data) {
         data.forEach(function (entry) {
             self.personList.push(new person(entry));

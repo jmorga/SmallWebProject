@@ -16,6 +16,8 @@ namespace WebProject.Controllers
         }
 
         [HttpPost]
+
+        //It creates a calculator object to perform the math operation specified and returns the result in a string
         public JsonResult Calculate(string firstNumber, string secondNumber, string mathOperation)
         {
             return Json((new Calculator(firstNumber, secondNumber, mathOperation)).result, JsonRequestBehavior.AllowGet);

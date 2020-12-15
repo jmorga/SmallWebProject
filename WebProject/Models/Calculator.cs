@@ -13,7 +13,7 @@ namespace WebProject.Models
         {
             double firstValue, secondValue;
          
-            try
+            try //if the numbers are not valid, return an empty string
             {
                 firstValue = Convert.ToDouble(firstNumber);
                 secondValue = Convert.ToDouble(secondNumber);
@@ -28,16 +28,16 @@ namespace WebProject.Models
             switch(symbol)
             {
                 case "+":
-                    result = $"{Convert.ToDouble(firstNumber) + Convert.ToDouble(secondNumber)}";
+                    result = $"{firstValue + secondValue}";
                     break;
                 case "-":
-                    result = $"{Convert.ToDouble(firstNumber) - Convert.ToDouble(secondNumber)}";
+                    result = $"{firstValue - secondValue}";
                     break;
                 case "*":
-                    result = $"{Convert.ToDouble(firstNumber) * Convert.ToDouble(secondNumber)}";
+                    result = $"{firstValue * secondValue}";
                     break;
                 case "/":
-                    result = $"{Convert.ToDouble(firstNumber) / Convert.ToDouble(secondNumber)}";
+                    result = $"{firstValue / secondValue}";
                     break;
                 default: result = " ";
                     break;

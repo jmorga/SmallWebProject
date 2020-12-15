@@ -5,6 +5,8 @@ using System.Web;
 
 namespace WebProject.Models
 {
+
+    //Used to store data of a person from the database
     public class Person
     {
         public int id { set; get; }

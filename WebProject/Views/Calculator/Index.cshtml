@@ -7,10 +7,9 @@
 
 <div class="container">
 
-    <!-- Text box 1
-    <input data-bind="value: firstValue" /> -->
+    <!-- Text box 1 -->
     <div class="tbxContainer">
-        <input data-bind="value: firstValue" type="text" />
+        <input class="tbx" data-bind="value: firstValue" type="text" />
         <spann class="error" data-bind="validationMessage: firstValue"></spann>
     </div>
 
@@ -23,6 +22,7 @@
     <!-- Text box 2 -->
     <div class="tbxContainer">
         <input data-bind="value: secondValue" />
+        <spann class="error" data-bind="validationMessage: secondValue"></spann>
     </div>
 
     <span>=</span>
@@ -34,7 +34,6 @@
  </div>
 
 
-<spann class="error" data-bind="validationMessage: secondValue"></spann>
  @section scripts {
     <script src="~/Scripts/knockout.validation.min.js"></script>
     <script src="~/Scripts/calcultator.js"></script>

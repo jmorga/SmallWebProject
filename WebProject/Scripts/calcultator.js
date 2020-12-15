@@ -5,12 +5,12 @@ function AppViewModel() {
 
     let self = this;
 
-    ko.validation.init({ insertMessages: false });
+    ko.validation.init({ insertMessages: false }); //To ensure that only custom error messages are displayed
 
+    //Adding the math operation options to the dropdown menu
     self.math = ko.observableArray(["+", "-", "*", "/"]);
-   // this.firstValue = ko.observable(0);
-   // self.secondValue = ko.observable(0);
 
+    //Adding observables and validation to the input values
     self.firstValue = ko.observable("0").extend({
         required: true,
         validation: {
@@ -33,9 +33,11 @@ function AppViewModel() {
 
     self.symbol = ko.observable();
 
+    //when a value changes from the dropdown menu or text box, this function wil fire
     ko.computed(function () {
 
-
+        //It calls the Calculate method from the calculator controller and sends the two values and math symbol
+        //to perform the required calculation. If successful, the result will be displayed in the result text box
         $.ajax({
             type: "POST",
             url: "/Calculator/Calculate",

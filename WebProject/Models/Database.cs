@@ -9,7 +9,13 @@ namespace WebProject.Models
 {
     public class Database
     {
-        string connectionString = "Data Source=JMORGA-LT1\\SQLEXPRESS;Initial Catalog=People;Integrated Security=True";
+        string connectionString;
+
+        public Database()
+        {
+            connectionString = "Data Source=JMORGA-LT1\\SQLEXPRESS;Initial Catalog=People;Integrated Security=True";
+        }
+
         public List<Person> getPersonList()
         {
             List<Person> personList = new List<Person>();
@@ -22,7 +28,7 @@ namespace WebProject.Models
 
             SqlDataReader reader = command.ExecuteReader();
 
-            while (reader.Read())
+            while (reader.Read()) //Reads a row from a table, creates a person object with the information and adds it into the person list
             {
                 personList.Add(new Person(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
             }
@@ -32,6 +38,8 @@ namespace WebProject.Models
             return personList;
         }
 
+
+        //Updates the Person table from the people database. 
         public void changePersonData(Person changedPerson)
         {
             SqlConnection connection = new SqlConnection(connectionString);

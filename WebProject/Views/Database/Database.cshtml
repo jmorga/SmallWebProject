@@ -6,14 +6,15 @@
 <h1>Database</h1>
 
 <table>
-    <thead>
-        <tr>
+    <thead> <!-- Adding the titles for the table -->
+        <tr> 
             <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
         </tr>
     </thead>
 
+    <!-- Displays the values of the table -->
     <tbody data-bind="foreach: personList">
         <tr>
             <td data-bind="text: id"></td>

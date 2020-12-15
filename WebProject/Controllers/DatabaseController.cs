@@ -16,15 +16,18 @@ namespace WebProject.Controllers
         }
 
         [HttpPost]
+        //Creates a database object, calls the getPersonList method to get all the data from the Person table in the people database,
+        //the method returns a list of person objects
         public JsonResult GetPeople()
         {
             Database database = new Models.Database();
-            List<Person> personList = database.getPersonList();
 
-            return Json(personList, JsonRequestBehavior.AllowGet);
+            return Json(database.getPersonList(), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
+        //It checks if any of the parameters are null. If they're not, a Database and Person object will be created and the Person table from the 
+        //people databased will be updated with the new information of a changed person
         public JsonResult ChangePeople(string id, string firstName, string lastName)
         {
             if (id != null && firstName != null && lastName != null)
