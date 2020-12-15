@@ -53,6 +53,10 @@ span {
 .container {
     padding: 20px;
     text-align: center;
+
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 ul {
@@ -62,6 +66,23 @@ ul {
 
 li {
     float: left;
+    position: relative;
+    padding: 10px;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    /*background-color: #eee;*/
+    padding: 10px;
+}
+
+.error {
+    color: red;
+}
+
+.tbxContainer {
     position: relative;
     padding: 10px;
 }

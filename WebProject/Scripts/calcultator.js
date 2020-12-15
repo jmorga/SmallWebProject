@@ -1,12 +1,40 @@
-﻿/// <reference path="knockout-3.5.1.debug.js" />
+﻿/// <reference path="knockout-3.5.1.js" />
+
 
 function AppViewModel() {
-    this.math = ko.observableArray(["+", "-", "*", "/"]);
-    this.firstValue = ko.observable(0);
-    this.secondValue = ko.observable(0);
-    this.symbol = ko.observable();
+
+    let self = this;
+
+    ko.validation.init({ insertMessages: false });
+
+    self.math = ko.observableArray(["+", "-", "*", "/"]);
+   // this.firstValue = ko.observable(0);
+   // self.secondValue = ko.observable(0);
+
+    self.firstValue = ko.observable("0").extend({
+        required: true,
+        validation: {
+            message: "Please enter a valid number",
+            validator: function (value) {
+                return !isNaN(value);
+            }
+        }
+    });
+
+    self.secondValue = ko.observable("0").extend({
+        required: true,
+        validation: {
+            message: "Please enter a valid number",
+            validator: function (value) {
+                return !isNaN(value);
+            }
+        }
+    });
+
+    self.symbol = ko.observable();
 
     ko.computed(function () {
+
 
         $.ajax({
             type: "POST",
@@ -22,7 +50,7 @@ function AppViewModel() {
                 $("#result").val(data);
             },
             error: function () {
-                return "fail";
+                alert("Failed at math operaton");
             }
         });
 

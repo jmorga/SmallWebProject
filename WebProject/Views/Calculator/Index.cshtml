@@ -7,23 +7,35 @@
 
 <div class="container">
 
-    <input data-bind="value: firstValue" />
+    <!-- Text box 1
+    <input data-bind="value: firstValue" /> -->
+    <div class="tbxContainer">
+        <input data-bind="value: firstValue" type="text" />
+        <spann class="error" data-bind="validationMessage: firstValue"></spann>
+    </div>
 
-    <select data-bind="options: math, value: symbol">
-        <!-- The dropdown menu
-        <option value="+">+</option>
-        <option value="-">-</option>
-        <option value="*">*</option>
-        <option value="/">/</option> -->
-    </select>
 
-    <input data-bind="value: secondValue" />
+    <!-- Dropdown Menu -->
+    <div class="tbxContainer">
+        <select class="menu" data-bind="options: math, value: symbol"></select>
+    </div>
+
+    <!-- Text box 2 -->
+    <div class="tbxContainer">
+        <input data-bind="value: secondValue" />
+    </div>
 
     <span>=</span>
 
-    <input disabled="disabled" id="result" />
-</div>
+    <!-- Result text box -->
+    <div class="tbxContainer">
+        <input disabled="disabled" id="result" />
+     </div>
+ </div>
 
-@section scripts {
+
+<spann class="error" data-bind="validationMessage: secondValue"></spann>
+ @section scripts {
+    <script src="~/Scripts/knockout.validation.min.js"></script>
     <script src="~/Scripts/calcultator.js"></script>
 }

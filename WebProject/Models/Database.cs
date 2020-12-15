@@ -21,6 +21,7 @@ namespace WebProject.Models
             connection.Open();
 
             SqlDataReader reader = command.ExecuteReader();
+
             while (reader.Read())
             {
                 personList.Add(new Person(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));

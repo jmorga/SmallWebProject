@@ -11,6 +11,20 @@ namespace WebProject.Models
 
         public Calculator(string firstNumber, string secondNumber, string symbol)
         {
+            double firstValue, secondValue;
+         
+            try
+            {
+                firstValue = Convert.ToDouble(firstNumber);
+                secondValue = Convert.ToDouble(secondNumber);
+            }
+            catch(FormatException e)
+            {
+                result = " ";
+                return;
+            }
+
+
             switch(symbol)
             {
                 case "+":
