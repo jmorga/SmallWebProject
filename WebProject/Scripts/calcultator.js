@@ -33,8 +33,15 @@ function AppViewModel() {
 
     self.symbol = ko.observable();
 
+    self.resultValue = ko.observable();
+    self.dummyValue = ko.observable();
+
     //when a value changes from the dropdown menu or text box, this function wil fire
     ko.computed(function () {
+        console.log(Date.now().toString() + " running ajax");
+
+        //clear existing
+        self.resultValue("");
 
         //It calls the Calculate method from the calculator controller and sends the two values and math symbol
         //to perform the required calculation. If successful, the result will be displayed in the result text box
@@ -49,7 +56,8 @@ function AppViewModel() {
             }),
             dataType: "json",
             success: function (data) {
-                $("#result").val(data);
+                //$("#result").val(data);
+                self.resultValue(data);         //set result value
             },
             error: function () {
                 alert("Failed at math operaton");

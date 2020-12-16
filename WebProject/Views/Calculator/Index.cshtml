@@ -29,9 +29,14 @@
 
     <!-- Result text box -->
     <div class="tbxContainer">
-        <input disabled="disabled" id="result" />
+        <input disabled="disabled" id="result" data-bind="value: resultValue" />
      </div>
  </div>
+<div>
+    <div class="tbxContainer">
+        <input  id="dummy" data-bind="value: dummyValue" />
+    </div>
+</div>
 
 
  @section scripts {
