@@ -16,7 +16,7 @@
 
     <!-- Dropdown Menu -->
     <div class="tbxContainer">
-        <select class="menu" data-bind="options: math, value: symbol"></select>
+        <select class="menu" data-bind="options: mathOperation, value: dropdownMenu"></select>
     </div>
 
     <!-- Text box 2 -->
@@ -30,16 +30,16 @@
     <!-- Result text box -->
     <div class="tbxContainer">
         <input disabled="disabled" id="result" data-bind="value: resultValue" />
-     </div>
- </div>
+    </div>
+</div>
+
 <div>
     <div class="tbxContainer">
-        <input  id="dummy" data-bind="value: dummyValue" />
+        <input id="dummy" data-bind="value: dummyValue" />
     </div>
 </div>
 
 
  @section scripts {
-    <script src="~/Scripts/knockout.validation.min.js"></script>
     <script src="~/Scripts/calcultator.js"></script>
 }
