@@ -122,6 +122,7 @@
     <Compile Include="Models\Calculator.cs" />
     <Compile Include="Models\Database.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
