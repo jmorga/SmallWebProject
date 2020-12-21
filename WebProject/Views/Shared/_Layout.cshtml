@@ -14,7 +14,8 @@
 
     <!-- Navbar -->
     <div class="navbar">
-        <ul>    <!-- The buttons to load the pages -->
+        <ul>
+            <!-- The buttons to load the pages -->
             <li>@Html.ActionLink("Calculator", "Index", "Calculator")</li>
             <li>@Html.ActionLink("Database", "Database", "Database")</li>
         </ul>
@@ -28,6 +29,7 @@
     <script src="~/Scripts/jquery-3.5.1.min.js"></script>
     <script src="~/Scripts/knockout-3.5.1.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/knockout.validation.min.js"></script>
     @RenderSection("scripts", required: false)
 
 </body>
