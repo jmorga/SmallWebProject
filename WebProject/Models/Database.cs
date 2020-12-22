@@ -18,48 +18,17 @@ namespace WebProject.Models
             connectionString = "Data Source=JMORGA-LT1\\SQLEXPRESS;Initial Catalog=People;Integrated Security=True";
         }
 
-        public Wrapper getPersonList()
+        public string getPersonList()
         {
             List<Person> personList = new List<Person>();
             string getPersonTableQuery = "SELECT * FROM Person";
-            SqlCommand command;
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(getPersonTableQuery, connection);
             SqlDataReader reader;
-            SqlConnection connection;
 
-            try
-            {
-                connection = new SqlConnection(connectionString);
-                connection.Open();
-            }
-            catch(InvalidOperationException exception)
-            {
-                return new Wrapper(false, $"InvalidOperationException: {exception.Message}");
-            }
-            catch (ArgumentException exception) 
-            {
-                return new Wrapper(false, $"ArgumentException: {exception.Message}");
-            }
-            catch (Exception exception)
-            {
-                return new Wrapper(false, $"Exception: {exception.Message}");
-            }
+            connection.Open();
 
-            command = new SqlCommand(getPersonTableQuery, connection);
-
-            try
-            {
-                reader = command.ExecuteReader();
-            }
-            catch (SqlException exception)
-            {
-                connection.Close();
-                return new Wrapper(false, $"SqlException: {exception.Message}");
-            }
-            catch(Exception exception)
-            {
-                connection.Close();
-                return new Wrapper(false, $"Exception: {exception.Message}");
-            }
+            reader = command.ExecuteReader();
 
             while (reader.Read()) //Reads a row from a table, creates a person object with the information and adds it into the person list
             {
@@ -68,59 +37,24 @@ namespace WebProject.Models
 
             connection.Close();
 
-            return new Wrapper(true, JsonConvert.SerializeObject(personList));
+            return JsonConvert.SerializeObject(personList);
         }
 
-
         //Updates the Person table from the people database. 
-        public Wrapper changePersonData(Person changedPerson)
+        public void changePersonData(Person changedPerson)
         {
-            SqlConnection connection;
             SqlCommand command;
-
-            if(string.IsNullOrEmpty(changedPerson.firstName) || string.IsNullOrEmpty(changedPerson.lastName)) 
-            {
-                return new Wrapper(false, "Error: An input field is null or empty");
-            }
-
-            try 
-            {
-                connection = new SqlConnection(connectionString);
-                connection.Open();
-            }
-            catch (SqlException exception) 
-            {
-                return new Wrapper(false, $"SqlException: {exception.Message}");
-            }
-            catch (ArgumentException exception) 
-            {
-                return new Wrapper(false, $"ArgumentException: {exception.Message}");
-            }
-            catch (Exception exception) 
-            {
-                return new Wrapper(false, $"Exception: {exception.Message}");
-            }
+            
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
 
             command = new SqlCommand("UPDATE Person SET FirstName = @FirstName, LastName = @LastName WHERE ID = @ID", connection);
             command.Parameters.AddWithValue("FirstName", changedPerson.firstName);
             command.Parameters.AddWithValue("LastName", changedPerson.lastName);
             command.Parameters.AddWithValue("ID", changedPerson.id);
-
-            try {
-                command.ExecuteNonQuery();
-            }
-            catch (SqlException exception) {
-                connection.Close();
-                return new Wrapper(false, $"Sql Exeption, Error: {exception.Message}");
-            }
-            catch (Exception exception) {
-                connection.Close();
-                return new Wrapper(false, $"Exception, Error: {exception.Message}");
-            }
-
+            command.ExecuteNonQuery();
+            
             connection.Close();
-
-            return new Wrapper(true, "Data updated successfully");
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebProject.Models;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace WebProject.Controllers
 {
@@ -21,9 +22,30 @@ namespace WebProject.Controllers
         public JsonResult GetPeople()
         {
             Database database = new Models.Database();
-            Wrapper list = database.getPersonList();
+            string jsonString;
 
-            return Json( new {result = list.result, jsonStr = list.data }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                jsonString = database.getPersonList();
+            }
+            catch (InvalidOperationException e)
+            {
+                return Json(new { result = false, jsonStr = $"InvalidOperationException: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (ArgumentException e)
+            {
+                return Json(new { result = false, jsonStr = $"Argument Exception: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (SqlException e)
+            {   
+                return Json(new { result = false, jsonStr = $"AqlException: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { result = false, jsonStr = $"Exception: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json( new {result = true, jsonStr = jsonString }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -32,9 +54,30 @@ namespace WebProject.Controllers
         public JsonResult ChangePeople(string id, string firstName, string lastName)
         {
             Database database = new Models.Database();
-            Wrapper update = database.changePersonData(new Person(Int32.Parse(id), firstName, lastName));
 
-            return Json(new { result = update.result, message = update.data }, JsonRequestBehavior.AllowGet);
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
+            {
+                return Json(new { result = false, message = "Error: An input field is null or empty" }, JsonRequestBehavior.AllowGet);
+            }
+
+            try
+            {
+                database.changePersonData(new Person(Int32.Parse(id), firstName, lastName));
+            }
+            catch (ArgumentException e)
+            {
+                return Json(new { result = false, message = $"Argument Exception: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (SqlException e)
+            {
+                return Json(new { result = false, message = $"AqlException: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { result = false, message = $"Exception: {e.Message}" }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { result = true, message = "Data updated successfully" }, JsonRequestBehavior.AllowGet);
         }
     }
 }
