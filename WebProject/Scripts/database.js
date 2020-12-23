@@ -50,37 +50,55 @@ function databaseViewModel() {
     //    document.getElementById("confirmationMsg").innerHTML = "";
     //});
 
+    //Stablish a connection with TableHub to know when the Person table changed.
+    $(function () {
+        let updates = $.connection.tableHub;
+
+        //If the values of the table changes, reload the data
+        updates.client.newUpdate = function () {
+            console.log("The database has changed");
+            loadData();
+        }
+
+        $.connection.hub.start()
+            .done(function () { console.log("Connection stablished") })
+            .fail(function () { alert("connection failed at Hub") });
+    });
     //It calls the GetPeople method from the database controller to get an array with the data from
     //the Person table in the People database
-    $.ajax({
-        type: "POST",
-        url: "/Database/GetPeople",
-        timeout: 6000,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-            if (data.result) {
-                setTable(data.jsonStr);
+    function loadData() {
+        $.ajax({
+            type: "POST",
+            url: "/Database/GetPeople",
+            timeout: 6000,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.result) {
+                    setTable(data.jsonStr);
+                }
+                else {
+                    alert(data.jsonStr);
+                }
+            },
+            error: function () {
+                alert("Could not stablish a connection with the database");
             }
-            else {
-                alert(data.jsonStr);
-            }
-        },
-        error: function () {
-            alert("Could not stablish a connection with the database");
-        }
-    });
-
+        });
+    }
 
     //When the ajax call gets the data, it calls this function to add the data into the list to be displayed in the web page
     function setTable(data) {
 
         data = JSON.parse(data);
+        self.personList([]);
 
         data.forEach(function (entry) {
             self.personList.push(new person(entry));
         });
     };
+
+    loadData();
 }
 
 ko.applyBindings(new databaseViewModel());
