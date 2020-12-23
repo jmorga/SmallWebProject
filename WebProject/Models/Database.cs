@@ -20,38 +20,6 @@ namespace WebProject.Models
             connectionString = "Data Source=JMORGA-LT1\\SQLEXPRESS;Initial Catalog=People;Integrated Security=True";
         }
 
-        //public string getPersonList()
-        //{
-        //    List<Person> personList = new List<Person>();
-        //    string getPersonTableQuery = "SELECT * FROM Person";
-        //    SqlDataReader reader;
-
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        connection.Open();
-
-        //        using(SqlCommand command = new SqlCommand(getPersonTableQuery, connection))
-        //        {
-        //            command.Notification = null;
-
-        //            SqlDependency dependency = new SqlDependency(command);
-        //            dependency.OnChange += new OnChangeEventHandler(dependencyOnChange);
-
-        //            if (connection.State == ConnectionState.Closed)
-        //                connection.Open();
-
-        //            reader = command.ExecuteReader();
-
-        //            while (reader.Read()) //Reads a row from a table, creates a person object with the information and adds it into the person list
-        //            {
-        //                personList.Add(new Person(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
-        //            }
-        //        }
-        //    }
-
-        //    return JsonConvert.SerializeObject(personList);
-        //}
-
         public string getPersonList()
         {
             List<Person> personList = new List<Person>();

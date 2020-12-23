@@ -11,6 +11,12 @@ namespace WebProject.Controllers
 {
     public class DatabaseController : Controller
     {
+        Database database;
+
+        public DatabaseController()
+        {
+            this.database = new Models.Database();
+        }
         public ActionResult Database()
         {
             return View();
@@ -21,12 +27,10 @@ namespace WebProject.Controllers
         //the method returns a list of person objects
         public JsonResult GetPeople()
         {
-            Database database = new Models.Database();
             string jsonString;
-
             try
             {
-                jsonString = database.getPersonList();
+                jsonString = this.database.getPersonList();
             }
             catch (InvalidOperationException e)
             {
@@ -53,8 +57,6 @@ namespace WebProject.Controllers
         //people databased will be updated with the new information of a changed person
         public JsonResult ChangePeople(string id, string firstName, string lastName)
         {
-            Database database = new Models.Database();
-
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName))
             {
                 return Json(new { result = false, message = "Error: An input field is null or empty" }, JsonRequestBehavior.AllowGet);
@@ -62,7 +64,7 @@ namespace WebProject.Controllers
 
             try
             {
-                database.changePersonData(new Person(Int32.Parse(id), firstName, lastName));
+                this.database.changePersonData(new Person(Int32.Parse(id), firstName, lastName));
             }
             catch (ArgumentException e)
             {
@@ -78,6 +80,33 @@ namespace WebProject.Controllers
             }
 
             return Json(new { result = true, message = "Data updated successfully" }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetUpdate(string list)
+        {
+            Person temp = null;
+
+            List<Person> newData = JsonConvert.DeserializeObject<List<Person>>(this.database.getPersonList());
+            List<Person> currentList = JsonConvert.DeserializeObject<List<Person>>(list);
+            List<Person> toUpdate = new List<Person>();
+ 
+            foreach(Person person in newData)
+            {
+                temp = currentList.Find(x => x.id == person.id);
+
+                if (temp != null)
+                {
+                    if(!temp.Equals(person))
+                        toUpdate.Add(person);
+                }
+                else
+                {
+                    toUpdate.Add(person);
+                }
+            }
+
+            return Json(JsonConvert.SerializeObject(toUpdate), JsonRequestBehavior.AllowGet);
         }
     }
 }

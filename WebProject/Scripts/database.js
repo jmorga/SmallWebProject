@@ -57,48 +57,71 @@ function databaseViewModel() {
         //If the values of the table changes, reload the data
         updates.client.newUpdate = function () {
             console.log("The database has changed");
-            loadData();
+            checkUpdate();
         }
 
         $.connection.hub.start()
             .done(function () { console.log("Connection stablished") })
             .fail(function () { alert("connection failed at Hub") });
     });
+
     //It calls the GetPeople method from the database controller to get an array with the data from
     //the Person table in the People database
-    function loadData() {
-        $.ajax({
-            type: "POST",
-            url: "/Database/GetPeople",
-            timeout: 6000,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                if (data.result) {
-                    setTable(data.jsonStr);
-                }
-                else {
-                    alert(data.jsonStr);
-                }
-            },
-            error: function () {
-                alert("Could not stablish a connection with the database");
+    $.ajax({
+        type: "POST",
+        url: "/Database/GetPeople",
+        timeout: 6000,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            if (data.result) {
+                setTable(data.jsonStr);
             }
-        });
-    }
+            else {
+                alert(data.jsonStr);
+            }
+        },
+        error: function () {
+            alert("Could not stablish a connection with the database");
+        }
+    });
 
     //When the ajax call gets the data, it calls this function to add the data into the list to be displayed in the web page
     function setTable(data) {
 
         data = JSON.parse(data);
-        self.personList([]);
 
         data.forEach(function (entry) {
             self.personList.push(new person(entry));
         });
     };
 
-    loadData();
+    function checkUpdate() {
+
+        $.ajax({
+            type: "POST",
+            url: "/Database/GetUpdate",
+            //timeout: 6000,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ list: ko.toJSON(self.personList) }),
+            dataType: "json",
+            success: function (newData) {
+                updateTable(newData);
+            },
+            error: function () {
+                alert("Could not check update");
+            }
+        });
+    };
+
+    function updateTable(data) {
+        data = JSON.parse(data);
+
+        data.forEach(function (entry) {
+            self.personList.remove(function (item) { return item.id() == entry.id });
+            self.personList.push(new person(entry));
+        });
+    };
 }
 
 ko.applyBindings(new databaseViewModel());
