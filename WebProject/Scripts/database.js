@@ -44,6 +44,7 @@ function person(completeName) {
 
 function databaseViewModel() {
     let self = this;
+    let timer = setInterval(checkUpdate, 6000);
 
     self.personList = ko.observableArray();
 
@@ -51,20 +52,24 @@ function databaseViewModel() {
         document.getElementById("confirmationMsg").innerHTML = "";
     });
 
+    //document.addEventListener("wheel", function () {
+    //    checkUpdate();
+    //});
+
     //Stablish a connection with TableHub to know when the Person table changed.
-    $(function () {
-        let updates = $.connection.tableHub;
+    //$(function () {
+    //    let updates = $.connection.tableHub;
 
-        //If the values of the table changes, reload the data
-        updates.client.newUpdate = function () {
-            console.log("The database has changed");
-            checkUpdate();
-        }
+    //    //If the values of the table changes, reload the data
+    //    updates.client.newUpdate = function () {
+    //        console.log("The database has changed");
+    //        checkUpdate();
+    //    }
 
-        $.connection.hub.start()
-            .done(function () { console.log("Connection stablished") })
-            .fail(function () { alert("connection failed at Hub") });
-    });
+    //    $.connection.hub.start()
+    //        .done(function () { console.log("Connection stablished") })
+    //        .fail(function () { alert("connection failed at Hub") });
+    //});
 
     //It calls the GetPeople method from the database controller to get an array with the data from
     //the Person table in the People database
@@ -98,15 +103,14 @@ function databaseViewModel() {
     };
 
     function checkUpdate() {
-
         $.ajax({
             type: "POST",
             url: "/Database/GetUpdate",
             //timeout: 6000,
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({ list: ko.toJSON(self.personList) }),
             dataType: "json",
             success: function (newData) {
+                console.log("Updating");
                 updateTable(newData);
             },
             error: function () {

@@ -32,10 +32,10 @@ namespace WebProject.Models
             connection.Open();
 
             //If a value from the Person table changes, it will fire the dependencyOnChange method to signal the viewer to reload the data
-            SqlDependency dependency = new SqlDependency(command);
-            dependency.OnChange += new OnChangeEventHandler(dependencyOnChange);
-            if (connection.State == ConnectionState.Closed)
-                connection.Open();
+            //SqlDependency dependency = new SqlDependency(command);
+            //dependency.OnChange += new OnChangeEventHandler(dependencyOnChange);
+            //if (connection.State == ConnectionState.Closed)
+            //    connection.Open();
 
             reader = command.ExecuteReader();
 

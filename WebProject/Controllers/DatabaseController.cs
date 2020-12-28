@@ -12,10 +12,11 @@ namespace WebProject.Controllers
     public class DatabaseController : Controller
     {
         Database database;
-
+        string cacheList;
         public DatabaseController()
         {
             this.database = new Models.Database();
+            this.cacheList = "personList";
         }
         public ActionResult Database()
         {
@@ -48,6 +49,8 @@ namespace WebProject.Controllers
             {
                 return Json(new { result = false, jsonStr = $"Exception: {e.Message}" }, JsonRequestBehavior.AllowGet);
             }
+
+            HttpContext.Cache[cacheList] = JsonConvert.DeserializeObject<List<Person>>(jsonString);
 
             return Json( new {result = true, jsonStr = jsonString }, JsonRequestBehavior.AllowGet);
         }
@@ -83,14 +86,14 @@ namespace WebProject.Controllers
         }
 
         [HttpPost]
-        //It compares the Person list from the database and the webpage and returns two JSON obects. One contains a list of Persons
+        //It compares the Person list from the database and the list from the cache. It returns two JSON obects: one contains a list of Persons
         //that need to be updated and/or added to the list and the other contains a list of Persons to be removed.
-        public JsonResult GetUpdate(string list)
+        public JsonResult GetUpdate(/*string list*/)
         {
             Person temp = null;
 
             List<Person> newList = JsonConvert.DeserializeObject<List<Person>>(this.database.getPersonList());
-            List<Person> currentList = JsonConvert.DeserializeObject<List<Person>>(list);
+            List<Person> currentList = (List<Person>)HttpContext.Cache[cacheList];
             List<Person> toUpdate = new List<Person>();
             List<Person> toRemove = new List<Person>();
 
@@ -100,12 +103,17 @@ namespace WebProject.Controllers
 
                 if (temp != null)
                 {
-                    if(!temp.Equals(person))
-                        toUpdate.Add(person);
+                    if (!temp.Equals(person))
+                    {
+                        toUpdate.Add(new Person(person.id, person.firstName, person.lastName));
+                        temp.firstName = person.firstName;
+                        temp.lastName = person.lastName;
+                    }
                 }
                 else
                 {
-                    toUpdate.Add(person);
+                    toUpdate.Add(new Person(person.id, person.firstName, person.lastName));
+                    currentList.Add(person);
                 }
             }
 
@@ -113,8 +121,12 @@ namespace WebProject.Controllers
             {
                 temp = newList.Find(x => x.id == person.id);
                 if (temp == null)
-                    toRemove.Add(person);
+                    toRemove.Add(new Person(person.id, person.firstName, person.lastName));
             }
+
+            currentList.RemoveAll(x => toRemove.Any(y => y.id == x.id));
+
+            HttpContext.Cache[cacheList] = currentList;
 
             return Json(new { update = JsonConvert.SerializeObject(toUpdate), delete = JsonConvert.SerializeObject(toRemove) }, JsonRequestBehavior.AllowGet);
         }
