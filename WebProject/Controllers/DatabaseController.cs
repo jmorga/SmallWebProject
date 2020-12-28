@@ -105,15 +105,12 @@ namespace WebProject.Controllers
                 {
                     if (!temp.Equals(person))
                     {
-                        toUpdate.Add(new Person(person.id, person.firstName, person.lastName));
-                        temp.firstName = person.firstName;
-                        temp.lastName = person.lastName;
+                        toUpdate.Add(person);
                     }
                 }
                 else
                 {
-                    toUpdate.Add(new Person(person.id, person.firstName, person.lastName));
-                    currentList.Add(person);
+                    toUpdate.Add(person);
                 }
             }
 
@@ -121,12 +118,10 @@ namespace WebProject.Controllers
             {
                 temp = newList.Find(x => x.id == person.id);
                 if (temp == null)
-                    toRemove.Add(new Person(person.id, person.firstName, person.lastName));
+                    toRemove.Add(person);
             }
 
-            currentList.RemoveAll(x => toRemove.Any(y => y.id == x.id));
-
-            HttpContext.Cache[cacheList] = currentList;
+            HttpContext.Cache[cacheList] = newList;
 
             return Json(new { update = JsonConvert.SerializeObject(toUpdate), delete = JsonConvert.SerializeObject(toRemove) }, JsonRequestBehavior.AllowGet);
         }
