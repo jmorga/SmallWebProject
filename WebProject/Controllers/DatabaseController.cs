@@ -83,15 +83,18 @@ namespace WebProject.Controllers
         }
 
         [HttpPost]
+        //It compares the Person list from the database and the webpage and returns two JSON obects. One contains a list of Persons
+        //that need to be updated and/or added to the list and the other contains a list of Persons to be removed.
         public JsonResult GetUpdate(string list)
         {
             Person temp = null;
 
-            List<Person> newData = JsonConvert.DeserializeObject<List<Person>>(this.database.getPersonList());
+            List<Person> newList = JsonConvert.DeserializeObject<List<Person>>(this.database.getPersonList());
             List<Person> currentList = JsonConvert.DeserializeObject<List<Person>>(list);
             List<Person> toUpdate = new List<Person>();
- 
-            foreach(Person person in newData)
+            List<Person> toRemove = new List<Person>();
+
+            foreach(Person person in newList)
             {
                 temp = currentList.Find(x => x.id == person.id);
 
@@ -106,7 +109,14 @@ namespace WebProject.Controllers
                 }
             }
 
-            return Json(JsonConvert.SerializeObject(toUpdate), JsonRequestBehavior.AllowGet);
+            foreach(Person person in currentList)
+            {
+                temp = newList.Find(x => x.id == person.id);
+                if (temp == null)
+                    toRemove.Add(person);
+            }
+
+            return Json(new { update = JsonConvert.SerializeObject(toUpdate), delete = JsonConvert.SerializeObject(toRemove) }, JsonRequestBehavior.AllowGet);
         }
     }
 }

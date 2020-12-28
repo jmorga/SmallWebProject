@@ -25,6 +25,7 @@ function person(completeName) {
             success: function (data) {
                 if (data.result) {
                     console.log(data.message);
+                    document.getElementById("confirmationMsg").innerHTML = "Table Updated";
                 }
                 else {
                     alert(data.message);
@@ -46,9 +47,9 @@ function databaseViewModel() {
 
     self.personList = ko.observableArray();
 
-    //document.addEventListener("click", function () {
-    //    document.getElementById("confirmationMsg").innerHTML = "";
-    //});
+    document.addEventListener("focusin", function () {
+        document.getElementById("confirmationMsg").innerHTML = "";
+    });
 
     //Stablish a connection with TableHub to know when the Person table changed.
     $(function () {
@@ -115,9 +116,15 @@ function databaseViewModel() {
     };
 
     function updateTable(data) {
-        data = JSON.parse(data);
 
-        data.forEach(function (entry) {
+        let toUpdate = JSON.parse(data.update);
+        let toDelete = JSON.parse(data.delete);
+
+        toDelete.forEach(function (entry) {
+            self.personList.remove(function (item) { return item.id() == entry.id });
+        });
+
+        toUpdate.forEach(function (entry) {
             self.personList.remove(function (item) { return item.id() == entry.id });
             self.personList.push(new person(entry));
         });
