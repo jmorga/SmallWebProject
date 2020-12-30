@@ -44,9 +44,9 @@ function person(completeName) {
 
 function databaseViewModel() {
     let self = this;
-    let timer = setTimeout(function updateRoutine() {
+    let timer = setTimeout(function updateTimer() {
         checkUpdate();
-        setTimeout(updateRoutine, 6000);
+        setTimeout(updateTimer, 6000);
     }, 6000);
 
     self.personList = ko.observableArray();
