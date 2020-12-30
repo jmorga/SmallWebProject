@@ -50,7 +50,7 @@ namespace WebProject.Controllers
                 return Json(new { result = false, jsonStr = $"Exception: {e.Message}" }, JsonRequestBehavior.AllowGet);
             }
 
-            HttpContext.Cache[cacheList] = JsonConvert.DeserializeObject<List<Person>>(jsonString);
+            Session[cacheList] = JsonConvert.DeserializeObject<List<Person>>(jsonString);
 
             return Json( new {result = true, jsonStr = jsonString }, JsonRequestBehavior.AllowGet);
         }
@@ -93,7 +93,7 @@ namespace WebProject.Controllers
             Person temp = null;
 
             List<Person> newList = JsonConvert.DeserializeObject<List<Person>>(this.database.getPersonList());
-            List<Person> currentList = (List<Person>)HttpContext.Cache[cacheList];
+            List<Person> currentList = (List<Person>)Session[cacheList];
             List<Person> toUpdate = new List<Person>();
             List<Person> toRemove = new List<Person>();
 
@@ -121,7 +121,7 @@ namespace WebProject.Controllers
                     toRemove.Add(person);
             }
 
-            HttpContext.Cache[cacheList] = newList;
+            Session[cacheList] = newList;
 
             return Json(new { update = JsonConvert.SerializeObject(toUpdate), delete = JsonConvert.SerializeObject(toRemove) }, JsonRequestBehavior.AllowGet);
         }
